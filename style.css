@@ -1,0 +1,814 @@
+:root {
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --card-background: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.15);
+    --control-bg: #ffffff;
+    --control-hover: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+html.dark-mode {
+    --background-color: #121212;
+    --text-color: #f0f0f0;
+    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --card-background: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --control-bg: #2d2d2d;
+    --control-hover: linear-gradient(135deg, #2d2d2d, #3d3d3d);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.portfolio-container {
+    position: relative;
+    width: 300px;   
+    height: 300px;
+}
+
+.cube {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+    cursor: pointer;
+    /* Remove the animation declaration from here */
+}
+
+.cube.rotating {
+    animation: randomRotate 30s infinite ease-in-out;
+}
+
+/* Add new animation keyframes for random rotation */
+@keyframes randomRotate {
+    0% { transform: rotateX(-10deg) rotateY(15deg); }
+    20% { transform: rotateX(5deg) rotateY(80deg); }
+    40% { transform: rotateX(-15deg) rotateY(150deg); }
+    60% { transform: rotateX(10deg) rotateY(220deg); }
+    80% { transform: rotateX(-5deg) rotateY(300deg); }
+    100% { transform: rotateX(-10deg) rotateY(15deg); }
+}
+
+/* Modify the float animation to only affect Y position without changing rotation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.cube:hover {
+    animation-play-state: paused;
+}
+
+/* Face styles */
+.face {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: var(--card-background);
+    border: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: min(40px, 13%) min(30px, 10%);
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    opacity: 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.face:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    /* Keep gradient on hover, just brighten slightly */
+    filter: brightness(1.05);
+}
+
+/* Face content styles */
+.face-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: min(20px, 7%);
+}
+
+.face-icon svg {
+    width: min(48px, 18%);
+    height: min(48px, 18%);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) 
+           drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+    opacity: 1;
+    color: currentColor;
+    stroke-width: 1.5;
+    display: block; /* Ensure icon is displayed as block */
+    visibility: visible !important; /* Force visibility */
+}
+
+/* Fix Tailwind specific class behavior */
+.w-12 {
+    width: 3rem !important;
+}
+
+.h-12 {
+    height: 3rem !important;
+}
+
+/* Ensure icon colors are applied correctly */
+.text-indigo-600 { color: #6366f1 !important; }
+.text-blue-600 { color: #2563eb !important; }
+.text-green-600 { color: #16a34a !important; }
+.text-orange-600 { color: #ea580c !important; }
+.text-purple-600 { color: #9333ea !important; }
+.text-pink-600 { color: #db2777 !important; }
+
+/* Make icons more visible in dark mode with stronger colors */
+html.dark-mode .face-icon svg.text-indigo-600 { color: #a5b4fc; }
+html.dark-mode .face-icon svg.text-blue-600 { color: #93c5fd; }
+html.dark-mode .face-icon svg.text-green-600 { color: #86efac; }
+html.dark-mode .face-icon svg.text-orange-600 { color: #fdba74; }
+html.dark-mode .face-icon svg.text-purple-600 { color: #d8b4fe; }
+html.dark-mode .face-icon svg.text-pink-600 { color: #f9a8d4; }
+
+/* Override any backface-visibility issues */
+.face .face-icon {
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    z-index: 10;
+}
+
+/* Ensure face title text colors are correctly displayed in dark mode */
+html.dark-mode .face-title {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+html.dark-mode .face-content {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* Apply Tailwind text colors to SVG icons - ensure proper contrast in both modes */
+.face-icon svg.text-indigo-600 { color: #6366f1; }
+.face-icon svg.text-blue-600 { color: #2563eb; }
+.face-icon svg.text-green-600 { color: #16a34a; }
+.face-icon svg.text-orange-600 { color: #ea580c; }
+.face-icon svg.text-purple-600 { color: #9333ea; }
+.face-icon svg.text-pink-600 { color: #db2777; }
+
+/* Dark mode specific icon colors for better visibility */
+html.dark-mode .face-icon svg.text-indigo-600 { color: #8284f5; }
+html.dark-mode .face-icon svg.text-blue-600 { color: #60a5fa; }
+html.dark-mode .face-icon svg.text-green-600 { color: #4ade80; }
+html.dark-mode .face-icon svg.text-orange-600 { color: #fb923c; }
+html.dark-mode .face-icon svg.text-purple-600 { color: #c084fc; }
+html.dark-mode .face-icon svg.text-pink-600 { color: #f472b6; }
+
+/* Apply responsive sizing from Tailwind */
+.face-icon svg.w-12 {
+    width: min(48px, 18%);
+}
+
+.face-icon svg.h-12 {
+    height: min(48px, 18%);
+}
+
+/* For smaller screen sizes */
+@media (max-width: 768px) {
+    .face-icon svg.w-12, 
+    .face-icon svg.h-12 {
+        width: min(36px, 16%);
+        height: min(36px, 16%);
+    }
+}
+
+@media (max-width: 480px) {
+    .face-icon svg.w-12, 
+    .face-icon svg.h-12 {
+        width: min(32px, 16%);
+        height: min(32px, 16%);
+    }
+}
+
+.face:hover .face-icon svg {
+    transform: scale(1.1);
+}
+
+.face-title {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+    font-weight: 600;
+    margin-bottom: min(15px, 6%);
+    transition: color 0.3s ease;
+    line-height: 1.2;
+    padding: 0 5px;
+}
+
+.face-content {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    line-height: 1.5;
+    transition: color 0.3s ease;
+    padding: 0 5px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Light mode specific face colors with improved vibrance */
+.front { 
+    transform: rotateY(0deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(236, 210, 255) 0%, rgb(255, 222, 235) 100%);
+}
+.back { 
+    transform: rotateY(180deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(219, 234, 254) 0%, rgb(233, 213, 255) 100%);
+}
+.right { 
+    transform: rotateY(90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(209, 250, 229) 0%, rgb(236, 253, 201) 100%);
+}
+.left { 
+    transform: rotateY(-90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(254, 240, 203) 0%, rgb(254, 226, 226) 100%);
+}
+.top { 
+    transform: rotateX(90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(233, 213, 255) 0%, rgb(224, 231, 255) 100%);
+}
+.bottom { 
+    transform: rotateX(-90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgb(251, 207, 232) 0%, rgb(244, 114, 182) 100%);
+}
+
+/* Enhanced Title and Subtitle Styling */
+.title {
+    position: absolute;
+    top: 60px;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #5f3dc4, #da77f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 20px rgba(218, 119, 242, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.title:hover {
+    transform: translateY(-3px);
+}
+
+.subtitle {
+    position: absolute;
+    top: 125px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #666;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.subtitle:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Enhanced Controls Styling */
+.controls {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    overflow-x: auto;
+    padding: 0 30px;
+}
+
+.control-btn {
+    padding: 10px 20px;
+    background: var(--control-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.control-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background: var(--control-hover);
+}
+
+.control-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal styling for right side panel */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-container {
+    width: 90%;
+    max-width: 450px;
+    height: 100%;
+    background-color: var(--card-background);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.modal-overlay.active .modal-container {
+    transform: translateX(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modal-close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--text-color);
+}
+
+.modal-content {
+    display: none; /* Start hidden */
+    height: 100%;
+    overflow-y: auto;
+    padding: 0;
+    position: relative;
+    flex-direction: column;
+}
+
+.modal-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    background: linear-gradient(135deg, #5f3dc4, #da77f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-body {
+    padding-right: 0.5rem;
+}
+
+/* Styled scrollbar for modal */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+/* Content styling for each section */
+/* Project section */
+.project-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.project-item:last-child {
+    border-bottom: none;
+}
+
+.project-item h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+}
+
+.tech-stack {
+    font-size: 0.85rem;
+    color: rgba(125, 79, 194, 0.9);
+    margin-top: 0.75rem;
+    font-weight: 500;
+}
+
+/* Certification section */
+.cert-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cert-item:last-child {
+    border-bottom: none;
+}
+
+.cert-item h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.cert-date {
+    font-size: 0.85rem;
+    color: rgba(125, 79, 194, 0.9);
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+/* Contact section */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.contact-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-color);
+}
+
+.contact-item a {
+    color: rgba(125, 79, 194, 0.9);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: rgb(125, 79, 194);
+    text-decoration: underline;
+}
+
+.contact-form {
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgba(125, 79, 194, 0.5);
+    box-shadow: 0 0 0 2px rgba(125, 79, 194, 0.2);
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #5f3dc4, #da77f2);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(125, 79, 194, 0.25);
+}
+
+/* Skills section */
+.skills-category {
+    margin-bottom: 2rem;
+}
+
+.skills-category h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.skill-item {
+    background: linear-gradient(135deg, rgba(125, 79, 194, 0.1), rgba(218, 119, 242, 0.1));
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    border: 1px solid rgba(125, 79, 194, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(125, 79, 194, 0.15);
+}
+
+/* Experience section */
+.exp-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.exp-item:last-child {
+    border-bottom: none;
+}
+
+.exp-header {
+    margin-bottom: 0.75rem;
+}
+
+.exp-header h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-color);
+}
+
+.exp-company {
+    font-weight: 500;
+    color: rgba(125, 79, 194, 0.9);
+}
+
+.exp-duration {
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+    color: rgba(125, 79, 194, 0.8);
+}
+
+/* Dark mode adjustments for modal */
+html.dark-mode .tech-stack,
+html.dark-mode .cert-date,
+html.dark-mode .contact-item a,
+html.dark-mode .exp-company,
+html.dark-mode .exp-duration {
+    color: rgba(156, 120, 216, 0.9);
+}
+
+html.dark-mode .skill-item {
+    background: linear-gradient(135deg, rgba(125, 79, 194, 0.2), rgba(218, 119, 242, 0.2));
+    border-color: rgba(125, 79, 194, 0.3);
+}
+
+/* Mobile responsive styles for modal */
+@media (max-width: 768px) {
+    .modal-container {
+        width: 80%;
+        padding: 1.5rem;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-container {
+        width: 90%;
+        padding: 1.25rem;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.4rem;
+    }
+    
+    .project-item h3,
+    .cert-item h3,
+    .exp-header h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Add theme toggle button styling */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+#theme-toggle-btn {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#theme-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+#theme-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-color);
+}
+
+/* Show/hide the appropriate icon based on theme */
+html.light-mode .moon-icon {
+    display: none;
+}
+
+html.light-mode .sun-icon {
+    display: block;
+}
+
+html.dark-mode .sun-icon {
+    display: none;
+}
+
+html.dark-mode .moon-icon {
+    display: block;
+}
+
+/* Add these styles to your existing CSS file */
+
+.cert-in-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, rgba(209, 250, 229, 0.3), rgba(236, 253, 201, 0.3));
+    border-radius: 12px;
+}
+
+.cert-in-progress svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    color: #16a34a;
+    animation: spin 4s infinite linear;
+}
+
+.cert-in-progress h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.cert-in-progress p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.coming-soon {
+    padding: 1rem;
+    border-left: 3px solid #16a34a;
+    margin-top: 2rem;
+}
+
+.coming-soon p {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.coming-soon ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.coming-soon li {
+    padding: 0.5rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.coming-soon li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Dark mode adjustments */
+html.dark-mode .cert-in-progress {
+    background: linear-gradient(135deg, rgba(22, 101, 52, 0.2), rgba(101, 163, 13, 0.2));
+}
+
+html.dark-mode .coming-soon {
+    border-left: 3px solid #4ade80;
+}
+
+html.dark-mode .coming-soon li:before {
+    color: #4ade80;
+}
